@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Standard Notecards</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Caveat:wght@500;700&family=Patrick+Hand&family=Architects+Daughter&family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700&family=Work+Sans:wght@400;500;600&family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+
+:root{
+  --board-1:#1c352c;
+  --board-2:#16302a;
+  --sidebar-bg:#132720;
+  --wood:#4a3225;
+  --chalk:#f4f1ea;
+  --chalk-dim:#c9d3c9;
+  --accent:#f4d35e;
+  --coral:#ef8a7f;
+  --blue:#8fc1e0;
+  --purple:#c3aee0;
+  --green:#8fcf9f;
+  --card-paper:#f4f1ea;
+  --card-ink:#22281f;
+  --font-display:'Kalam',cursive;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:14px;
+  --background-image:none;
+  --media-panel-bg:rgba(244,241,234,0.06);
+}
+
+html[data-theme="midnight"]{
+  --board-1:#20213f;
+  --board-2:#15162b;
+  --sidebar-bg:#111226;
+  --wood:#3a3a5c;
+  --accent:#b39ddb;
+  --coral:#ef8a7f;
+  --blue:#8fc1e0;
+  --green:#8fcf9f;
+}
+html[data-theme="ocean"]{
+  --board-1:#0f3443;
+  --board-2:#0a252f;
+  --sidebar-bg:#092028;
+  --wood:#2c5364;
+  --accent:#7fd8d0;
+  --coral:#f2a37a;
+  --blue:#8fc1e0;
+  --green:#8fcf9f;
+}
+html[data-theme="ember"]{
+  --board-1:#3a1f1f;
+  --board-2:#2a1515;
+  --sidebar-bg:#241111;
+  --wood:#5c2f2f;
+  --accent:#f2a65a;
+  --coral:#ef8a7f;
+  --blue:#8fb8d8;
+  --green:#a3cf8f;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  background-image:
+    var(--background-image),
+    radial-gradient(ellipse at 20% 0%, rgba(255,255,255,0.03), transparent 60%),
+    linear-gradient(180deg,var(--board-1),var(--board-2));
+  background-size:cover, auto, auto;
+  background-position:center, center, center;
+  background-repeat:no-repeat, no-repeat, no-repeat;
+  color:var(--chalk);
+  min-height:100vh;
+}
+
+.app-shell{
+  display:flex;
+  min-height:100vh;
+  align-items:stretch;
+}
+
+.sidebar{
+  width:300px;
+  flex-shrink:0;
+  background:var(--sidebar-bg);
+  border-right:3px solid var(--wood);
+  display:flex;
+  flex-direction:column;
+  padding:20px 16px;
+  gap:16px;
+}
+.sidebar-brand-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:6px;
+}
+.brand-logo-shell{
+  width:46px;
+  height:46px;
+  border-radius:12px;
+  border:1px solid rgba(244,241,234,0.2);
+  background:rgba(244,241,234,0.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.brand-logo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.brand-logo-fallback{
+  font-size:22px;
+  color:var(--accent);
+}
+.sidebar-brand{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:38px;
+  line-height:0.95;
+  letter-spacing:0.4px;
+}
+.sidebar-brand span{color:var(--accent);}
+.sidebar-sub{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--chalk-dim);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-top:6px;
+  margin-left:2px;
+}
+
+.new-deck-btn{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:14px;
+  padding:11px 14px;
+  border-radius:8px;
+  border:2px dashed rgba(244,241,234,0.35);
+  background:transparent;
+  color:var(--chalk-dim);
+  cursor:pointer;
+  text-align:left;
+  transition:border-color 0.15s, color 0.15s;
+}
+.new-deck-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.deck-nav{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  overflow-y:auto;
+  flex:1;
+}
+.deck-nav-empty{
+  font-family:var(--font-display);
+  font-size:14px;
+  color:var(--chalk-dim);
+  padding:10px 4px;
+}
+.archive-section{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(244,241,234,0.16);
+}
+.archive-section-title{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:var(--chalk-dim);
+  padding:0 4px 6px;
+}
+.deck-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+.deck-row:hover{background:rgba(244,241,234,0.06);transform:translateX(1px);}
+.deck-row.active{
+  background:rgba(244,241,234,0.1);
+  border-color:rgba(244,241,234,0.2);
+}
+.deck-row.archived{
+  opacity:0.82;
+  background:rgba(244,241,234,0.04);
+}
+.deck-row.archived:hover{background:rgba(244,241,234,0.08);} 
+.deck-dot{
+  width:9px;height:9px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.deck-row-name{
+  font-size:14px;
+  font-weight:500;
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.deck-row-count{
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--chalk-dim);
+  flex-shrink:0;
+}
+.deck-row-del{
+  background:none;
+  border:none;
+  color:var(--chalk-dim);
+  cursor:pointer;
+  font-size:13px;
+  opacity:0;
+  padding:2px 4px;
+  flex-shrink:0;
+}
+.deck-row:hover .deck-row-del{opacity:0.7;}
+.deck-row-del:hover{opacity:1 !important;color:var(--coral);}
+
+.settings-btn{
+  font-family:var(--font-body);
+  font-size:13px;
+  font-weight:500;
+  color:var(--chalk-dim);
+  background:none;
+  border:1px solid rgba(244,241,234,0.2);
+  border-radius:8px;
+  padding:10px 12px;
+  cursor:pointer;
+  text-align:left;
+  transition:border-color 0.15s, color 0.15s;
+}
+.settings-btn:hover{
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+.media-panel{
+  background:var(--media-panel-bg);
+  border:1px solid rgba(244,241,234,0.16);
+  border-radius:10px;
+  padding:10px 10px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.media-panel-title{
+  font-family:var(--font-mono);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  color:var(--chalk-dim);
+}
+.media-input{
+  width:100%;
+  background:rgba(244,241,234,0.08);
+  border:1px solid rgba(244,241,234,0.2);
+  border-radius:8px;
+  color:var(--chalk);
+  font-family:var(--font-body);
+  font-size:13px;
+  padding:8px 9px;
+}
+.media-input:focus{outline:none;border-color:var(--accent);} 
+.media-help{
+  font-size:11px;
+  color:var(--chalk-dim);
+  line-height:1.4;
+}
+.media-frame{
+  width:100%;
+  border-radius:8px;
+  overflow:hidden;
+  background:#000;
+  border:1px solid rgba(244,241,234,0.14);
+}
+.media-frame iframe,
+.media-frame audio{
+  width:100%;
+  display:block;
+}
+.media-frame audio{padding:6px 0;background:#0d1713;}
+
+.main-area{
+  flex:1;
+  min-width:0;
+  padding:28px 32px 80px;
+  overflow-y:auto;
+}
+
+.main-topbar{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-bottom:18px;
+  min-height:36px;
+}
+
+.welcome-panel{
+  max-width:480px;
+  margin-top:10vh;
+}
+.welcome-title{
+  font-family:var(--font-display);
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+.welcome-body{
+  color:var(--chalk-dim);
+  line-height:1.6;
+  font-size:15px;
+}
+
+/* buttons */
+.btn{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:14px;
+  padding:10px 18px;
+  border-radius:8px;
+  border:2px solid var(--chalk);
+  background:transparent;
+  color:var(--chalk);
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+.btn:hover{background:var(--chalk);color:var(--card-ink);}
+.btn-primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#2a2205;
+}
+.btn-primary:hover{
+  filter:brightness(1.08);
+  background:var(--accent);
+  color:#2a2205;
+}
+.btn-danger{border-color:var(--coral);color:var(--coral);}
+.btn-danger:hover{background:var(--coral);color:#3a0d05;}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* deck detail */
+.deck-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:22px;
+  flex-wrap:wrap;
+}
+.deck-title{
+  font-family:var(--font-display);
+  font-size:30px;
+  font-weight:700;
+}
+
+.card-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:24px;
+}
+.card-row{
+  background:rgba(244,241,234,0.06);
+  border:1px solid rgba(244,241,234,0.15);
+  border-radius:10px;
+  padding:12px 14px;
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:14px;
+  align-items:center;
+}
+.card-row .face{font-size:14px;line-height:1.4;}
+.card-row .face-label{
+  font-family:var(--font-mono);
+  font-size:10px;
+  text-transform:uppercase;
+  color:var(--chalk-dim);
+  letter-spacing:1px;
+  display:block;
+  margin-bottom:3px;
+}
+.row-actions{display:flex;gap:8px;}
+.icon-btn{
+  background:none;
+  border:none;
+  cursor:pointer;
+  font-size:15px;
+  opacity:0.55;
+  padding:2px;
+  color:var(--chalk);
+}
+.icon-btn:hover{opacity:1;}
+
+.empty-state{
+  border:2px dashed rgba(244,241,234,0.25);
+  border-radius:10px;
+  padding:40px 20px;
+  text-align:center;
+  color:var(--chalk-dim);
+  font-family:var(--font-display);
+  font-size:18px;
+}
+
+/* add card form */
+.form-panel{
+  background:rgba(0,0,0,0.2);
+  border:1px solid rgba(244,241,234,0.15);
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:22px;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:12px;
+}
+label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--chalk-dim);
+  display:block;
+  margin-bottom:6px;
+}
+textarea, input[type=text]{
+  width:100%;
+  background:rgba(244,241,234,0.08);
+  border:1px solid rgba(244,241,234,0.25);
+  border-radius:8px;
+  color:var(--chalk);
+  font-family:var(--font-body);
+  font-size:14px;
+  padding:10px 12px;
+  resize:vertical;
+}
+textarea:focus, input[type=text]:focus{
+  outline:none;
+  border-color:var(--accent);
+}
+
+.color-swatches{display:flex;gap:8px;margin-top:8px;}
+.swatch{
+  width:20px;height:20px;
+  border-radius:50%;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.swatch.selected{border-color:var(--chalk);}
+
+/* study mode picker */
+.mode-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:18px;
+}
+.mode-card{
+  background:rgba(244,241,234,0.06);
+  border:1px solid rgba(244,241,234,0.2);
+  border-radius:12px;
+  padding:20px 18px;
+  cursor:pointer;
+  transition:border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+.mode-card:hover{
+  border-color:var(--accent);
+  background:rgba(244,241,234,0.1);
+  transform:translateY(-2px);
+}
+.mode-name{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:19px;
+  color:var(--accent);
+  margin-bottom:6px;
+}
+.mode-desc{
+  font-size:13px;
+  color:var(--chalk-dim);
+  line-height:1.4;
+}
+
+/* study session */
+.study-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+}
+.progress-track{
+  width:100%;
+  height:6px;
+  background:rgba(244,241,234,0.15);
+  border-radius:4px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  transition:width 0.25s ease;
+}
+.study-meta{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--chalk-dim);
+  display:flex;
+  justify-content:space-between;
+  width:100%;
+}
+
+.flip-stage{
+  width:100%;
+  max-width:520px;
+  height:300px;
+  perspective:1400px;
+  cursor:pointer;
+}
+.flip-card{
+  position:relative;
+  width:100%;
+  height:100%;
+  transition:transform 0.45s cubic-bezier(.2,.8,.3,1);
+  transform-style:preserve-3d;
+}
+.flip-card.flipped{transform:rotateY(180deg);}
+.face-panel{
+  position:absolute;
+  inset:0;
+  backface-visibility:hidden;
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:36px;
+  font-family:var(--font-display);
+  font-size:26px;
+  line-height:1.4;
+  box-shadow:0 12px 0 rgba(0,0,0,0.3), 0 20px 30px rgba(0,0,0,0.35);
+}
+.face-front{
+  background:var(--card-paper);
+  color:var(--card-ink);
+}
+.face-back{
+  background:#233a30;
+  color:var(--chalk);
+  border:2px solid var(--accent);
+  transform:rotateY(180deg);
+}
+.face-hint{
+  position:absolute;
+  bottom:14px;
+  left:0;right:0;
+  font-family:var(--font-mono);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  opacity:0.5;
+}
+
+.study-actions{display:flex;gap:14px;}
+.pill-btn{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:15px;
+  padding:14px 28px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  transition:transform 0.1s ease, filter 0.1s ease;
+}
+.pill-btn:active{transform:scale(0.96);}
+.pill-again{background:var(--coral);color:#3a0d05;}
+.pill-know{background:var(--green);color:#0d3316;}
+.pill-btn:not(.pill-again):not(.pill-know){background:rgba(244,241,234,0.09);color:var(--chalk);border:1px solid rgba(244,241,234,0.2);}
+.pill-btn:hover{filter:brightness(1.08);}
+
+.mcq-question{
+  font-family:var(--font-display);
+  font-size:24px;
+  text-align:center;
+  max-width:520px;
+  line-height:1.4;
+  padding:10px 8px;
+}
+.mcq-options{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
+  max-width:520px;
+}
+.mcq-option{
+  font-family:var(--font-body);
+  font-size:15px;
+  text-align:left;
+  padding:14px 16px;
+  border-radius:10px;
+  border:2px solid rgba(244,241,234,0.25);
+  background:rgba(244,241,234,0.06);
+  color:var(--chalk);
+  cursor:pointer;
+  transition:border-color 0.15s ease, background 0.15s ease;
+}
+.mcq-option:hover:not(:disabled){border-color:var(--accent);}
+.mcq-option:disabled{cursor:default;}
+.mcq-option.correct{border-color:var(--green);background:rgba(143,207,159,0.18);}
+.mcq-option.wrong{border-color:var(--coral);background:rgba(239,138,127,0.18);}
+
+.short-input{
+  width:100%;
+  max-width:520px;
+  background:rgba(244,241,234,0.08);
+  border:2px solid rgba(244,241,234,0.25);
+  border-radius:10px;
+  color:var(--chalk);
+  font-family:var(--font-body);
+  font-size:16px;
+  padding:14px 16px;
+}
+.short-input:focus{outline:none;border-color:var(--accent);}
+.short-reveal{
+  width:100%;
+  max-width:520px;
+  background:rgba(244,241,234,0.06);
+  border:1px solid rgba(244,241,234,0.2);
+  border-radius:10px;
+  padding:16px 18px;
+  text-align:center;
+}
+.short-reveal-label{
+  font-family:var(--font-mono);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--chalk-dim);
+  margin-bottom:6px;
+}
+.short-reveal-text{font-family:var(--font-display);font-size:20px;}
+.verdict-correct{color:var(--green);font-size:13px;margin-top:10px;font-family:var(--font-mono);}
+.verdict-wrong{color:var(--coral);font-size:13px;margin-top:10px;font-family:var(--font-mono);}
+
+.summary{text-align:center;padding:30px 20px;}
+.summary-num{font-family:var(--font-display);font-size:52px;color:var(--accent);}
+.summary-label{
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--chalk-dim);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-bottom:20px;
+}
+.summary-note{
+  font-family:var(--font-body);
+  font-size:14px;
+  color:var(--chalk-dim);
+  margin:10px auto 20px;
+  max-width:420px;
+  line-height:1.5;
+}
+
+/* settings view */
+.settings-title{
+  font-family:var(--font-display);
+  font-size:28px;
+  margin-bottom:24px;
+}
+.settings-section{margin-bottom:32px;}
+.settings-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:var(--chalk-dim);
+  margin-bottom:12px;
+}
+.upload-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.upload-card{
+  background:rgba(244,241,234,0.06);
+  border:1px solid rgba(244,241,234,0.2);
+  border-radius:10px;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.upload-title{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:13px;
+}
+.upload-card input[type=file]{
+  color:var(--chalk);
+  font-size:13px;
+  cursor:pointer;
+}
+.upload-card input[type=file]::file-selector-button{
+  font-family:var(--font-body);
+  font-weight:600;
+  border:none;
+  border-radius:6px;
+  padding:6px 10px;
+  margin-right:8px;
+  cursor:pointer;
+  background:var(--accent);
+  color:#2a2205;
+}
+.theme-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:14px;
+}
+.theme-swatch{
+  border-radius:10px;
+  padding:16px 14px;
+  cursor:pointer;
+  border:2px solid transparent;
+  position:relative;
+}
+.theme-swatch.selected{border-color:var(--chalk);}
+.theme-swatch-name{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:13px;
+}
+.theme-swatch-dots{display:flex;gap:5px;margin-top:8px;}
+.theme-dot{width:12px;height:12px;border-radius:50%;}
+
+.font-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;
+}
+.font-option{
+  background:rgba(244,241,234,0.06);
+  border:2px solid rgba(244,241,234,0.2);
+  border-radius:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  transition:border-color 0.15s;
+}
+.font-option.selected{border-color:var(--accent);}
+.font-option-label{
+  font-family:var(--font-mono);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:var(--chalk-dim);
+  margin-bottom:4px;
+}
+.font-option-sample{font-size:19px;}
+
+.bulk-panel{
+  background:rgba(0,0,0,0.18);
+  border:1px solid rgba(244,241,234,0.15);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:22px;
+}
+.bulk-help{
+  font-size:12px;
+  color:var(--chalk-dim);
+  margin-top:8px;
+  line-height:1.4;
+}
+
+.hidden{display:none !important;}
+
+@media (max-width:760px){
+  .app-shell{flex-direction:column;}
+  .sidebar{
+    width:100%;
+    border-right:none;
+    border-bottom:3px solid var(--wood);
+    flex-direction:row;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .deck-nav{
+    flex-direction:row;
+    flex-wrap:wrap;
+    max-height:none;
+  }
+  .deck-row{width:auto;}
+  .main-area{padding:20px 16px 60px;}
+  .form-grid{grid-template-columns:1fr;}
+  .card-row{grid-template-columns:1fr;}
+  .flip-stage{height:260px;}
+  .face-panel{font-size:20px;padding:24px;}
+}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand-wrap">
+      <div class="brand-logo-shell">
+        <img class="brand-logo hidden" id="brandLogo" alt="brand logo">
+        <div class="brand-logo-fallback" id="brandLogoFallback">✎</div>
+      </div>
+      <div>
+        <div style="text-decoration:none;color:inherit;">
+          <div class="sidebar-brand">Standard<span> Notecards</span></div>
+          <div class="sidebar-sub">flashcards</div>
+        </div>
+      </div>
+    </div>
+    <button class="new-deck-btn" id="newDeckBtn">+ new deck</button>
+    <div class="deck-nav" id="deckNav"></div>
+    <div class="media-panel" id="mediaPanel">
+      <div class="media-panel-title">study soundtrack</div>
+      <input class="media-input" id="mediaUrlInput" type="text" placeholder="Paste YouTube or audio link" value="${state.settings.mediaUrl || ''}">
+      <div class="media-help">YouTube links and audio URLs work here. It stays visible while you study.</div>
+      <div class="media-frame" id="mediaFrame"></div>
+    </div>
+    <button class="settings-btn" id="settingsBtn">⚙ settings</button>
+  </aside>
+  <main class="main-area" id="mainArea"></main>
+</div>
+
+<script>
+const TAG_COLORS = [
+  {name:'yellow', hex:'#f4d35e'},
+  {name:'coral', hex:'#ef8a7f'},
+  {name:'blue', hex:'#8fc1e0'},
+  {name:'purple', hex:'#c3aee0'},
+  {name:'green', hex:'#8fcf9f'},
+];
+
+const THEMES = [
+  {id:'chalkboard', name:'Chalkboard', colors:['#16302a','#f4d35e','#ef8a7f']},
+  {id:'midnight', name:'Midnight', colors:['#15162b','#b39ddb','#8fc1e0']},
+  {id:'ocean', name:'Ocean', colors:['#0a252f','#7fd8d0','#f2a37a']},
+  {id:'ember', name:'Ember', colors:['#2a1515','#f2a65a','#a3cf8f']},
+];
+
+const BACKGROUND_PRESETS = [
+  {id:'none', name:'Default', css:'none'},
+  {id:'chalk', name:'Chalk Dust', css:'linear-gradient(135deg, rgba(255,255,255,0.14), rgba(244,211,94,0.2)), linear-gradient(180deg, #16302a, #234f3d)'},
+  {id:'wood', name:'Wood Grain', css:'linear-gradient(135deg, rgba(82,46,24,0.38), rgba(20,11,5,0.4)), linear-gradient(180deg, #4d2f1f, #2b180f)'},
+  {id:'sky', name:'Sky Glow', css:'linear-gradient(135deg, rgba(119,196,255,0.22), rgba(255,255,255,0.08)), linear-gradient(180deg, #0f3f57, #173d6f)'},
+  {id:'night', name:'Night Mist', css:'linear-gradient(135deg, rgba(255,255,255,0.12), rgba(109,90,184,0.28)), linear-gradient(180deg, #15162b, #0e1020)'},
+  {id:'vintage', name:'Vintage Paper', css:'linear-gradient(135deg, rgba(247,229,193,0.38), rgba(155,92,41,0.22)), linear-gradient(180deg, #7a4c2a, #3d2413)'},
+  {id:'sunset', name:'Sunset Glow', css:'linear-gradient(135deg, rgba(255,181,88,0.24), rgba(197,89,118,0.24)), linear-gradient(180deg, #4b2b4a, #8c4d4b)'},
+  {id:'library', name:'Library Shelf', css:'linear-gradient(135deg, rgba(153,121,85,0.24), rgba(34,32,47,0.28)), linear-gradient(180deg, #3e2f1d, #1d2524)'},
+  {id:'mint', name:'Mint Breeze', css:'linear-gradient(135deg, rgba(144,240,214,0.22), rgba(28,83,77,0.26)), linear-gradient(180deg, #1e4d45, #153733)'},
+  {id:'rose', name:'Rose Mood', css:'linear-gradient(135deg, rgba(255,176,196,0.22), rgba(115,46,72,0.24)), linear-gradient(180deg, #5a2d45, #2c1822)'}
+];
+
+const DISPLAY_FONTS = [
+  {id:'Kalam', css:"'Kalam',cursive"},
+  {id:'Caveat', css:"'Caveat',cursive"},
+  {id:'Patrick Hand', css:"'Patrick Hand',cursive"},
+  {id:'Architects Daughter', css:"'Architects Daughter',cursive"},
+];
+
+const BODY_FONTS = [
+  {id:'Inter', css:"'Inter',sans-serif"},
+  {id:'Nunito', css:"'Nunito',sans-serif"},
+  {id:'Work Sans', css:"'Work Sans',sans-serif"},
+  {id:'Poppins', css:"'Poppins',sans-serif"},
+];
+
+const STUDY_MODES = [
+  {id:'flashcard', label:'Flashcards only', desc:'Flip the card, then say if you knew it.'},
+  {id:'mcq', label:'Multiple choice', desc:'Pick the right answer from four options.'},
+  {id:'short', label:'Short answer', desc:'Type your answer, then check yourself.'},
+  {id:'mixed', label:'Mixed', desc:'A random mix of all three, card by card.'}
+];
+
+const DECKS_KEY = 'chalkbox-decks-v1';
+const SETTINGS_KEY = 'chalkbox-settings-v1';
+
+let state = {
+  decks: [],
+  view: 'welcome',
+  activeDeckId: null,
+  study: null,
+  settings: {theme:'chalkboard', displayFont:'Kalam', bodyFont:'Inter', backgroundImage:'', logoImage:'', backgroundPreset:'none', sidebarColor:'', mediaUrl:'', showMediaPanel:true},
+  artHistory: []
+};
+
+function uid(){ return Math.random().toString(36).slice(2, 10); }
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+async function readAndResizeImage(file, maxWidth, maxHeight, quality=0.9){
+  const dataUrl = await new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = ()=> reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+
+  const img = await new Promise((resolve, reject)=>{
+    const image = new Image();
+    image.onload = ()=> resolve(image);
+    image.onerror = ()=> reject(new Error('Could not load image.'));
+    image.src = dataUrl;
+  });
+
+  const canvas = document.createElement('canvas');
+  let width = img.width;
+  let height = img.height;
+
+  if(width > maxWidth || height > maxHeight){
+    const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+    width = Math.max(1, Math.round(width * scale));
+    height = Math.max(1, Math.round(height * scale));
+  }
+
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, width, height);
+
+  return canvas.toDataURL(file.type.includes('png') ? 'image/png' : 'image/jpeg', quality);
+}
+
+function colorHex(name){
+  const c = TAG_COLORS.find(t=>t.name===name);
+  return c ? c.hex : TAG_COLORS[0].hex;
+}
+
+async function loadDecks(){
+  try{
+    const raw = localStorage.getItem(DECKS_KEY);
+    if(raw){
+      state.decks = JSON.parse(raw);
+      return;
+    }
+  }catch(e){ /* no existing data, or storage unavailable */ }
+  state.decks = sampleDecks();
+  await saveDecks();
+}
+
+async function saveDecks(){
+  try{
+    localStorage.setItem(DECKS_KEY, JSON.stringify(state.decks));
+  }catch(e){
+    console.error('Could not save decks', e);
+  }
+}
+
+function loadSettings(){
+  try{
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if(raw){
+      state.settings = Object.assign({}, state.settings, JSON.parse(raw));
+    }
+  }catch(e){ /* fall back to defaults */ }
+  applySettings();
+}
+
+function saveSettings(){
+  try{
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.settings));
+  }catch(e){
+    console.error('Could not save settings', e);
+  }
+}
+
+function pushArtHistory(){
+  state.artHistory.push({
+    backgroundImage: state.settings.backgroundImage,
+    logoImage: state.settings.logoImage
+  });
+  if(state.artHistory.length > 10){
+    state.artHistory.shift();
+  }
+}
+
+function undoLastArtChange(){
+  if(state.artHistory.length === 0){
+    alert('Nothing to undo yet.');
+    return;
+  }
+  const prev = state.artHistory.pop();
+  state.settings.backgroundImage = prev.backgroundImage;
+  state.settings.logoImage = prev.logoImage;
+  saveSettings();
+  applySettings();
+  if(state.view === 'settings'){
+    render();
+  }
+}
+
+function applySettings(){
+  document.documentElement.setAttribute('data-theme', state.settings.theme);
+  const df = DISPLAY_FONTS.find(f=>f.id===state.settings.displayFont) || DISPLAY_FONTS[0];
+  const bf = BODY_FONTS.find(f=>f.id===state.settings.bodyFont) || BODY_FONTS[0];
+  document.documentElement.style.setProperty('--font-display', df.css);
+  document.documentElement.style.setProperty('--font-body', bf.css);
+
+  const preset = BACKGROUND_PRESETS.find(p=>p.id===state.settings.backgroundPreset) || BACKGROUND_PRESETS[0];
+  const hasCustomImage = !!state.settings.backgroundImage;
+  const backgroundValue = hasCustomImage ? `url("${state.settings.backgroundImage}")` : preset.css;
+  document.documentElement.style.setProperty('--background-image', backgroundValue);
+
+  if(state.settings.sidebarColor){
+    document.documentElement.style.setProperty('--sidebar-bg', state.settings.sidebarColor);
+  } else {
+    document.documentElement.style.removeProperty('--sidebar-bg');
+  }
+
+  const brandLogo = document.getElementById('brandLogo');
+  const brandLogoFallback = document.getElementById('brandLogoFallback');
+  if(brandLogo && brandLogoFallback){
+    if(state.settings.logoImage){
+      brandLogo.src = state.settings.logoImage;
+      brandLogo.classList.remove('hidden');
+      brandLogoFallback.classList.add('hidden');
+    } else {
+      brandLogo.removeAttribute('src');
+      brandLogo.classList.add('hidden');
+      brandLogoFallback.classList.remove('hidden');
+    }
+  }
+}
+
+function sampleDecks(){
+  return [
+    {
+      id: uid(),
+      name: 'Cell Biology',
+      color: 'green',
+      cards: [
+        {id: uid(), front: 'What is the powerhouse of the cell?', back: 'The mitochondria — it produces ATP through cellular respiration.'},
+        {id: uid(), front: 'What does the nucleus do?', back: 'Stores DNA and controls the activities of the cell.'},
+      ]
+    },
+    {
+      id: uid(),
+      name: 'Spanish Vocab',
+      color: 'coral',
+      cards: [
+        {id: uid(), front: 'la biblioteca', back: 'the library'},
+        {id: uid(), front: 'el conocimiento', back: 'knowledge'},
+      ]
+    }
+  ];
+}
+
+function getActiveDeck(){
+  return state.decks.find(d=>d.id === state.activeDeckId);
+}
+
+function renderMediaPanel(){
+  const panel = document.getElementById('mediaPanel');
+  const input = document.getElementById('mediaUrlInput');
+  const frame = document.getElementById('mediaFrame');
+  if(!panel || !input || !frame) return;
+
+  panel.classList.toggle('hidden', !state.settings.showMediaPanel);
+  if(!state.settings.showMediaPanel) return;
+
+  input.value = state.settings.mediaUrl || '';
+  frame.innerHTML = '';
+
+  if(!state.settings.mediaUrl){
+    frame.innerHTML = '<div class="media-help" style="padding:4px 0">Nothing here yet.</div>';
+    return;
+  }
+
+  const url = state.settings.mediaUrl.trim();
+  const youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/i);
+
+  if(youtubeMatch){
+    const videoId = youtubeMatch[1];
+    frame.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    return;
+  }
+
+  const audioMatch = /\.(mp3|m4a|aac|wav|ogg)(\?.*)?$/i.test(url);
+  if(/spotify/i.test(url)){
+    const spotifyEmbed = url.includes('/playlist/')
+      ? `<iframe src="https://open.spotify.com/embed/playlist/${url.split('/playlist/')[1].split(/[?#]/)[0]}" width="100%" height="152" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`
+      : url.includes('/track/')
+        ? `<iframe src="https://open.spotify.com/embed/track/${url.split('/track/')[1].split(/[?#]/)[0]}" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`
+        : `<iframe src="https://open.spotify.com/embed" width="100%" height="80" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
+    frame.innerHTML = spotifyEmbed;
+  } else if(audioMatch || /soundcloud|bandcamp/i.test(url)){
+    frame.innerHTML = `<audio controls preload="metadata" src="${escapeHtml(url)}"></audio>`;
+  } else {
+    frame.innerHTML = '<div class="media-help" style="padding:4px 0">Paste a YouTube link, Spotify link, or a direct audio URL.</div>';
+  }
+}
+
+function render(){
+  applySettings();
+  renderSidebar();
+  renderMediaPanel();
+  renderMain();
+}
+
+function renderSidebar(){
+  const nav = document.getElementById('deckNav');
+  const visibleDecks = state.decks.filter(deck=>!deck.archived);
+  const archivedDecks = state.decks.filter(deck=>deck.archived);
+
+  if(visibleDecks.length === 0 && archivedDecks.length === 0){
+    nav.innerHTML = `<div class="deck-nav-empty">no decks yet</div>`;
+  } else {
+    const activeMarkup = visibleDecks.length > 0 ? visibleDecks.map(deck=>`
+      <div class="deck-row ${deck.id===state.activeDeckId && state.view!=='settings' ?'active':''}" data-deck="${deck.id}">
+        <div class="deck-dot" style="background:${colorHex(deck.color)}"></div>
+        <div class="deck-row-name">${escapeHtml(deck.name)}</div>
+        <div class="deck-row-count">${deck.cards.length}</div>
+        <button class="deck-row-del" data-action="archive-deck" data-deck="${deck.id}" title="Archive deck">🗄</button>
+        <button class="deck-row-del" data-action="delete-deck" data-deck="${deck.id}" title="Delete deck">✕</button>
+      </div>
+    `).join('') : '<div class="deck-nav-empty">no active decks</div>';
+
+    const archivedMarkup = archivedDecks.length > 0 ? `
+      <div class="archive-section">
+        <div class="archive-section-title">archived decks</div>
+        ${archivedDecks.map(deck=>`
+          <div class="deck-row archived" data-deck="${deck.id}">
+            <div class="deck-dot" style="background:${colorHex(deck.color)}"></div>
+            <div class="deck-row-name">${escapeHtml(deck.name)}</div>
+            <div class="deck-row-count">${deck.cards.length}</div>
+            <button class="deck-row-del" data-action="restore-deck" data-deck="${deck.id}" title="Restore deck">↺</button>
+            <button class="deck-row-del" data-action="delete-deck" data-deck="${deck.id}" title="Delete deck">✕</button>
+          </div>
+        `).join('')}
+      </div>
+    ` : '';
+
+    nav.innerHTML = activeMarkup + archivedMarkup;
+  }
+
+  nav.querySelectorAll('.deck-row').forEach(row=>{
+    row.addEventListener('click', (e)=>{
+      if(e.target.closest('[data-action]')) return;
+      const deck = state.decks.find(d=>d.id === row.dataset.deck);
+      if(!deck || deck.archived) return;
+      state.activeDeckId = row.dataset.deck;
+      state.view = 'deck';
+      render();
+    });
+  });
+  nav.querySelectorAll('[data-action="archive-deck"]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const deck = state.decks.find(d=>d.id === btn.dataset.deck);
+      if(deck){
+        deck.archived = true;
+        if(state.activeDeckId === deck.id){
+          state.activeDeckId = null;
+          state.view = 'welcome';
+        }
+        await saveDecks();
+        render();
+      }
+    });
+  });
+
+  nav.querySelectorAll('[data-action="restore-deck"]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const deck = state.decks.find(d=>d.id === btn.dataset.deck);
+      if(deck){
+        deck.archived = false;
+        await saveDecks();
+        render();
+      }
+    });
+  });
+
+  nav.querySelectorAll('[data-action="delete-deck"]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      if(confirm('Delete this deck and all its cards?')){
+        state.decks = state.decks.filter(d=>d.id !== btn.dataset.deck);
+        if(state.activeDeckId === btn.dataset.deck){
+          state.activeDeckId = null;
+          state.view = 'welcome';
+        }
+        await saveDecks();
+        render();
+      }
+    });
+  });
+
+  const mediaInput = document.getElementById('mediaUrlInput');
+  if(mediaInput){
+    mediaInput.addEventListener('change', ()=>{
+      state.settings.mediaUrl = mediaInput.value.trim();
+      saveSettings();
+      renderMediaPanel();
+    });
+  }
+}
+
+function renderMain(){
+  const app = document.getElementById('mainArea');
+  if(state.view === 'welcome'){
+    renderWelcome(app);
+  } else if(state.view === 'deck'){
+    renderDeck(app);
+  } else if(state.view === 'study-setup'){
+    renderStudySetup(app);
+  } else if(state.view === 'study'){
+    renderStudy(app);
+  } else if(state.view === 'settings'){
+    renderSettings(app);
+  }
+}
+
+function renderWelcome(app){
+  app.innerHTML = `
+    <div class="main-topbar"></div>
+    <div class="welcome-panel">
+      <div class="welcome-title">Pick a deck, or make one</div>
+      <div class="welcome-body">Choose a deck from the sidebar to review its cards, or create a new deck to start adding your own.</div>
+    </div>
+  `;
+}
+
+async function createDeck(){
+  const name = prompt('Name this deck (e.g. "US History Ch. 5")');
+  if(!name || !name.trim()) return;
+  const color = TAG_COLORS[state.decks.length % TAG_COLORS.length].name;
+  const deck = {id: uid(), name: name.trim(), color, cards: []};
+  state.decks.push(deck);
+  state.activeDeckId = deck.id;
+  state.view = 'deck';
+  await saveDecks();
+  render();
+}
+
+function renderDeck(app){
+  const deck = getActiveDeck();
+  if(!deck){ state.view='welcome'; render(); return; }
+
+  let rows = '';
+  if(deck.cards.length === 0){
+    rows = `<div class="empty-state">no cards yet — add your first one below.</div>`;
+  } else {
+    rows = '<div class="card-list">' + deck.cards.map(card => `
+      <div class="card-row">
+        <div class="face"><span class="face-label">front</span>${escapeHtml(card.front)}</div>
+        <div class="face"><span class="face-label">back</span>${escapeHtml(card.back)}</div>
+        <div class="row-actions">
+          <button class="icon-btn" data-action="delete-card" data-card="${card.id}" title="Delete card">✕</button>
+        </div>
+      </div>
+    `).join('') + '</div>';
+  }
+
+  app.innerHTML = `
+    <div class="main-topbar">
+      <button class="btn btn-primary" id="studyDeckBtn">▶ study deck</button>
+    </div>
+    <div class="deck-header">
+      <div>
+        <div class="deck-title">${escapeHtml(deck.name)}</div>
+        <div class="color-swatches" id="colorSwatches">
+          ${TAG_COLORS.map(c=>`<div class="swatch ${c.name===deck.color?'selected':''}" style="background:${c.hex}" data-color="${c.name}"></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    ${rows}
+
+    <div class="form-panel">
+      <div class="form-grid">
+        <div>
+          <label>front</label>
+          <textarea id="newFront" rows="2" placeholder="Question or term"></textarea>
+        </div>
+        <div>
+          <label>back</label>
+          <textarea id="newBack" rows="2" placeholder="Answer or definition"></textarea>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="addCardBtn">+ add card</button>
+    </div>
+
+    <div class="bulk-panel">
+      <div class="settings-label" style="margin-bottom:8px">Import from files</div>
+      <input type="file" id="fileImportInput" accept=".txt,.md,.csv,.json,image/*" multiple>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn" id="importFilesBtn">📄 import from files</button>
+      </div>
+      <div class="bulk-help">Upload text files or images. Images are read with OCR so textbook pages can become flashcards.</div>
+    </div>
+
+    <div class="bulk-panel">
+      <div class="settings-label" style="margin-bottom:8px">Bulk import</div>
+      <textarea id="bulkImportInput" rows="5" placeholder="Paste one card per line, like:&#10;What is 2+2? | 4&#10;Who wrote Hamlet? :: William Shakespeare"></textarea>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn" id="importCardsBtn">↳ import cards</button>
+      </div>
+      <div class="bulk-help">Use a new line for each card. Separate front and back with |, ::, or a tab.</div>
+    </div>
+  `;
+
+  document.getElementById('studyDeckBtn').addEventListener('click', ()=> startStudy(deck.id));
+  document.getElementById('addCardBtn').addEventListener('click', addCard);
+  document.getElementById('importFilesBtn').addEventListener('click', ()=> document.getElementById('fileImportInput').click());
+  document.getElementById('fileImportInput').addEventListener('change', handleFileImport);
+  document.getElementById('importCardsBtn').addEventListener('click', importBulkCards);
+
+  document.querySelectorAll('#colorSwatches .swatch').forEach(sw=>{
+    sw.addEventListener('click', async ()=>{
+      deck.color = sw.dataset.color;
+      await saveDecks();
+      render();
+    });
+  });
+
+  app.querySelectorAll('[data-action="delete-card"]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      deck.cards = deck.cards.filter(c=>c.id !== btn.dataset.card);
+      await saveDecks();
+      render();
+    });
+  });
+}
+
+async function addCard(){
+  const deck = getActiveDeck();
+  const front = document.getElementById('newFront').value.trim();
+  const back = document.getElementById('newBack').value.trim();
+  if(!front || !back){
+    alert('Fill in both the front and back of the card.');
+    return;
+  }
+  deck.cards.push({id: uid(), front, back});
+  await saveDecks();
+  render();
+}
+
+function parseBulkCards(text){
+  const lines = text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+  const cards = [];
+
+  lines.forEach(line=>{
+    const separators = ['||', '::', '|', '\t'];
+    let bestIndex = -1;
+    let bestSep = '';
+
+    separators.forEach(sep=>{
+      const idx = line.indexOf(sep);
+      if(idx !== -1 && (bestIndex === -1 || idx < bestIndex)){
+        bestIndex = idx;
+        bestSep = sep;
+      }
+    });
+
+    if(bestIndex !== -1){
+      const front = line.slice(0, bestIndex).trim();
+      const back = line.slice(bestIndex + bestSep.length).trim();
+      if(front || back){
+        cards.push({front, back});
+      }
+      return;
+    }
+
+    const labelMatch = line.match(/^(question|q|front|note|term)\s*[:\-]\s*(.+)$/i);
+    if(labelMatch){
+      cards.push({front: labelMatch[2].trim(), back: ''});
+      return;
+    }
+
+    cards.push({front: line, back: ''});
+  });
+
+  return cards;
+}
+
+function normalizeCardText(text){
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+async function readTextFromFile(file){
+  if(file.type.startsWith('image/')){
+    if(typeof Tesseract === 'undefined'){
+      throw new Error('OCR is not available right now.');
+    }
+    const { data } = await Tesseract.recognize(file, 'eng', { logger: ()=>{} });
+    return data.text;
+  }
+  return await file.text();
+}
+
+async function handleFileImport(event){
+  const files = Array.from(event.target.files || []);
+  if(files.length === 0) return;
+
+  const deckName = prompt('Name this imported deck', 'Imported deck');
+  if(deckName === null) return;
+
+  const deck = {
+    id: uid(),
+    name: deckName.trim() || 'Imported deck',
+    color: TAG_COLORS[state.decks.length % TAG_COLORS.length].name,
+    cards: []
+  };
+
+  for(const file of files){
+    try{
+      const text = await readTextFromFile(file);
+      const cards = parseBulkCards(text);
+      cards.forEach(card=>{
+        const front = normalizeCardText(card.front);
+        const back = normalizeCardText(card.back);
+        if(front || back){
+          deck.cards.push({id: uid(), front, back});
+        }
+      });
+    } catch(err){
+      console.error('Could not import', file.name, err);
+    }
+  }
+
+  if(deck.cards.length === 0){
+    alert('No cards were created from the selected files.');
+    return;
+  }
+
+  state.decks.push(deck);
+  state.activeDeckId = deck.id;
+  state.view = 'deck';
+  await saveDecks();
+  render();
+}
+
+async function importBulkCards(){
+  const deck = getActiveDeck();
+  const text = document.getElementById('bulkImportInput').value;
+  if(!deck){
+    alert('Create or choose a deck first.');
+    return;
+  }
+  const cards = parseBulkCards(text);
+  if(cards.length === 0){
+    alert('Paste at least one card entry to import.');
+    return;
+  }
+
+  cards.forEach(card=>{
+    const front = normalizeCardText(card.front);
+    const back = normalizeCardText(card.back);
+    if(front || back){
+      deck.cards.push({id: uid(), front, back});
+    }
+  });
+
+  await saveDecks();
+  document.getElementById('bulkImportInput').value = '';
+  render();
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function startStudy(deckId){
+  const deck = state.decks.find(d=>d.id===deckId);
+  if(!deck || deck.cards.length===0){
+    alert('Add some cards to this deck before studying.');
+    return;
+  }
+  state.activeDeckId = deckId;
+  state.view = 'study-setup';
+  render();
+}
+
+function renderStudySetup(app){
+  const deck = getActiveDeck();
+  if(!deck){ state.view='welcome'; render(); return; }
+
+  app.innerHTML = `
+    <div class="main-topbar">
+      <button class="btn" id="backBtn">← cancel</button>
+    </div>
+    <div class="deck-title" style="margin-bottom:6px">${escapeHtml(deck.name)}</div>
+    <div style="color:var(--chalk-dim);margin-bottom:20px;font-family:var(--font-mono);font-size:12px">${deck.cards.length} card${deck.cards.length===1?'':'s'} — how do you want to study?</div>
+    <div class="mode-grid">
+      ${STUDY_MODES.map(m=>`
+        <div class="mode-card" data-mode="${m.id}">
+          <div class="mode-name">${m.label}</div>
+          <div class="mode-desc">${m.desc}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  document.getElementById('backBtn').addEventListener('click', ()=>{ state.view='deck'; render(); });
+  app.querySelectorAll('.mode-card').forEach(card=>{
+    card.addEventListener('click', ()=> beginStudySession(card.dataset.mode));
+  });
+}
+
+function normalizeAnswer(str){
+  return str.trim().toLowerCase().replace(/[^\w\s]/g,'').replace(/\s+/g,' ');
+}
+
+function isAnswerMatch(typed, correct){
+  const a = normalizeAnswer(typed);
+  const b = normalizeAnswer(correct);
+  if(!a || !b) return false;
+  if(a === b) return true;
+  const aWords = a.split(' ');
+  const bWords = b.split(' ');
+  const overlap = aWords.filter(w=>bWords.includes(w)).length;
+  return overlap >= Math.max(1, Math.min(2, bWords.length - 1));
+}
+
+function getDistractorPool(deck, excludeCard){
+  let pool = deck.cards.filter(c=>c.id!==excludeCard.id).map(c=>c.back);
+  if(pool.length < 3){
+    const extra = state.decks
+      .filter(d=>d.id!==deck.id)
+      .flatMap(d=>d.cards.map(c=>c.back));
+    pool = pool.concat(extra);
+  }
+  const seen = new Set([excludeCard.back]);
+  pool = pool.filter(b=>{
+    if(seen.has(b)) return false;
+    seen.add(b);
+    return true;
+  });
+  return pool;
+}
+
+function buildOptions(deck, card){
+  const pool = shuffle(getDistractorPool(deck, card)).slice(0, 3);
+  const options = shuffle([card.back, ...pool]);
+  return options.filter((opt, idx, arr)=>arr.indexOf(opt)===idx).slice(0, 4);
+}
+
+function beginStudySession(mode){
+  const deck = getActiveDeck();
+  const cards = shuffle(deck.cards);
+  const queue = cards.map(card=>{
+    let cardMode = mode;
+    if(mode === 'mixed'){
+      const pool = ['flashcard','mcq','short'];
+      cardMode = pool[Math.floor(Math.random()*pool.length)];
+    }
+    if(cardMode === 'mcq' && getDistractorPool(deck, card).length === 0){
+      cardMode = 'flashcard';
+    }
+    return {card, mode: cardMode};
+  });
+  state.study = {
+    queue, index: 0, flipped: false, known: 0, missed: [], total: queue.length,
+    answered: false, lastCorrect: null, chosenOption: null
+  };
+  state.view = 'study';
+  render();
+}
+
+function renderStudy(app){
+  const deck = getActiveDeck();
+  const s = state.study;
+
+  const topbar = `<div class="main-topbar"><button class="btn" id="exitStudyBtn">← exit</button></div>`;
+
+  if(!s || s.index >= s.queue.length){
+    const missedCount = s ? s.missed.length : 0;
+    const knownCount = s ? s.known : 0;
+    app.innerHTML = topbar + `
+      <div class="summary">
+        <div class="summary-num">${knownCount}/${s.total}</div>
+        <div class="summary-label">cards you knew</div>
+        <div class="summary-note">${missedCount > 0 ? `The ${missedCount} cards you missed are queued for another pass so the review can feel more like spaced repetition.` : 'You cleared the deck for now — come back later for another short pass.'}</div>
+        <div class="btn-row" style="justify-content:center">
+          ${missedCount>0 ? `<button class="btn btn-primary" id="reviewMissedBtn">review the ${missedCount} you missed</button>` : ''}
+          <button class="btn" id="restartBtn">choose a mode again</button>
+          <button class="btn" id="doneBtn">back to deck</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('exitStudyBtn').addEventListener('click', exitStudy);
+    document.getElementById('doneBtn').addEventListener('click', exitStudy);
+    document.getElementById('restartBtn').addEventListener('click', ()=>{ state.view='study-setup'; render(); });
+    const reviewBtn = document.getElementById('reviewMissedBtn');
+    if(reviewBtn){
+      reviewBtn.addEventListener('click', ()=>{
+        state.study = {
+          queue: shuffle(s.missed), index: 0, flipped: false, known: 0, missed: [], total: s.missed.length,
+          answered: false, lastCorrect: null, chosenOption: null
+        };
+        render();
+      });
+    }
+    return;
+  }
+
+  const item = s.queue[s.index];
+  const pct = Math.round((s.index / s.queue.length) * 100);
+  const modeLabel = STUDY_MODES.find(m=>m.id===item.mode).label;
+
+  const header = `
+    <div style="width:100%;max-width:520px">
+      <div class="study-meta">
+        <span>${escapeHtml(deck.name)} · ${modeLabel}</span>
+        <span>${s.index+1} / ${s.queue.length}</span>
+      </div>
+      <div class="progress-track" style="margin-top:6px">
+        <div class="progress-fill" style="width:${pct}%"></div>
+      </div>
+    </div>
+  `;
+
+  app.innerHTML = topbar + '<div id="studyBody"></div>';
+  const body = document.getElementById('studyBody');
+
+  if(item.mode === 'mcq'){
+    renderMcqStudy(body, deck, item, header);
+  } else if(item.mode === 'short'){
+    renderShortStudy(body, deck, item, header);
+  } else {
+    renderFlashcardStudy(body, deck, item, header);
+  }
+
+  document.getElementById('exitStudyBtn').addEventListener('click', exitStudy);
+}
+
+function queueReviewCard(s, item){
+  s.missed.push(item);
+  s.queue.push({...item, mode:item.mode});
+}
+
+function renderFlashcardStudy(body, deck, item, header){
+  const s = state.study;
+  const card = item.card;
+  body.innerHTML = `
+    <div class="study-wrap">
+      ${header}
+      <div class="flip-stage" id="flipStage">
+        <div class="flip-card ${s.flipped?'flipped':''}" id="flipCard">
+          <div class="face-panel face-front">${escapeHtml(card.front)}<div class="face-hint">tap to flip</div></div>
+          <div class="face-panel face-back">${escapeHtml(card.back)}<div class="face-hint">tap to flip</div></div>
+        </div>
+      </div>
+      <div class="study-actions">
+        <button class="pill-btn pill-again" id="againBtn">again</button>
+        <button class="pill-btn" id="hardBtn">hard</button>
+        <button class="pill-btn pill-know" id="knowBtn">easy</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('flipStage').addEventListener('click', ()=>{
+    s.flipped = !s.flipped;
+    document.getElementById('flipCard').classList.toggle('flipped');
+  });
+  document.getElementById('againBtn').addEventListener('click', (e)=>{ e.stopPropagation(); queueReviewCard(s, item); advanceCard(); });
+  document.getElementById('hardBtn').addEventListener('click', (e)=>{ e.stopPropagation(); queueReviewCard(s, item); advanceCard(); });
+  document.getElementById('knowBtn').addEventListener('click', (e)=>{ e.stopPropagation(); s.known += 1; advanceCard(); });
+}
+
+function renderMcqStudy(body, deck, item, header){
+  const s = state.study;
+  const card = item.card;
+  if(!item._options){ item._options = buildOptions(deck, card); }
+  const answered = s.answered;
+
+  body.innerHTML = `
+    <div class="study-wrap">
+      ${header}
+      <div class="mcq-question">${escapeHtml(card.front)}</div>
+      <div class="mcq-options">
+        ${item._options.map((opt,i)=>{
+          let cls = 'mcq-option';
+          if(answered){
+            if(opt === card.back) cls += ' correct';
+            else if(opt === s.chosenOption) cls += ' wrong';
+          }
+          return `<button class="${cls}" data-opt="${i}" ${answered?'disabled':''}>${escapeHtml(opt)}</button>`;
+        }).join('')}
+      </div>
+      ${answered ? `
+        <div class="study-actions" style="margin-top:16px">
+          <button class="pill-btn pill-again" id="againBtn">again</button>
+          <button class="pill-btn" id="hardBtn">hard</button>
+          <button class="pill-btn pill-know" id="knowBtn">easy</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  if(!answered){
+    body.querySelectorAll('.mcq-option').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const chosen = item._options[Number(btn.dataset.opt)];
+        s.chosenOption = chosen;
+        s.answered = true;
+        if(chosen === card.back){ s.known += 1; } else { queueReviewCard(s, item); }
+        render();
+      });
+    });
+  } else {
+    document.getElementById('againBtn').addEventListener('click', ()=>{
+      queueReviewCard(s, item); s.answered = false; s.chosenOption = null; s.lastCorrect = null;
+      advanceCard();
+    });
+    document.getElementById('hardBtn').addEventListener('click', ()=>{
+      queueReviewCard(s, item); s.answered = false; s.chosenOption = null; s.lastCorrect = null;
+      advanceCard();
+    });
+    document.getElementById('knowBtn').addEventListener('click', ()=>{
+      s.known += 1; s.answered = false; s.chosenOption = null; s.lastCorrect = null;
+      advanceCard();
+    });
+  }
+}
+
+function renderShortStudy(body, deck, item, header){
+  const s = state.study;
+  const card = item.card;
+  const answered = s.answered;
+
+  body.innerHTML = `
+    <div class="study-wrap">
+      ${header}
+      <div class="mcq-question">${escapeHtml(card.front)}</div>
+      ${!answered ? `
+        <input type="text" id="shortInput" class="short-input" placeholder="Type your answer" autocomplete="off" />
+        <button class="btn btn-primary" id="checkBtn">check answer</button>
+      ` : `
+        <div class="short-reveal">
+          <div class="short-reveal-label">correct answer</div>
+          <div class="short-reveal-text">${escapeHtml(card.back)}</div>
+          ${s.lastCorrect ? "<div class='verdict-correct'>looks like a match</div>" : "<div class='verdict-wrong'>not an exact match — be honest with yourself</div>"}
+        </div>
+        <div class="study-actions">
+          <button class="pill-btn pill-again" id="againBtn">again</button>
+          <button class="pill-btn" id="hardBtn">hard</button>
+          <button class="pill-btn pill-know" id="knowBtn">easy</button>
+        </div>
+      `}
+    </div>
+  `;
+
+  if(!answered){
+    const input = document.getElementById('shortInput');
+    input.focus();
+    const submit = ()=>{
+      const typed = input.value;
+      s.lastCorrect = isAnswerMatch(typed, card.back) && typed.trim().length > 0;
+      s.answered = true;
+      render();
+    };
+    document.getElementById('checkBtn').addEventListener('click', submit);
+    input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') submit(); });
+  } else {
+    document.getElementById('againBtn').addEventListener('click', ()=>{
+      queueReviewCard(s, item); s.answered = false; s.lastCorrect = null;
+      advanceCard();
+    });
+    document.getElementById('knowBtn').addEventListener('click', ()=>{
+      s.known += 1; s.answered = false; s.lastCorrect = null;
+      advanceCard();
+    });
+  }
+}
+
+function advanceCard(){
+  state.study.index += 1;
+  state.study.flipped = false;
+  state.study.answered = false;
+  state.study.chosenOption = null;
+  state.study.lastCorrect = null;
+  render();
+}
+
+function exitStudy(){
+  state.study = null;
+  state.view = 'deck';
+  render();
+}
+
+function renderSettings(app){
+  app.innerHTML = `
+    <div class="main-topbar">
+      <button class="btn" id="closeSettingsBtn">← back</button>
+    </div>
+    <div class="settings-title">Settings</div>
+
+    <div class="settings-section">
+      <div class="settings-label">Theme</div>
+      <div class="theme-grid" id="themeGrid">
+        ${THEMES.map(t=>`
+          <div class="theme-swatch ${state.settings.theme===t.id?'selected':''}" data-theme="${t.id}" style="background:${t.colors[0]}">
+            <div class="theme-swatch-name" style="color:${t.colors[1]}">${t.name}</div>
+            <div class="theme-swatch-dots">
+              ${t.colors.map(c=>`<div class="theme-dot" style="background:${c}"></div>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Heading font</div>
+      <div class="font-grid" id="displayFontGrid">
+        ${DISPLAY_FONTS.map(f=>`
+          <div class="font-option ${state.settings.displayFont===f.id?'selected':''}" data-font="${f.id}">
+            <div class="font-option-label">${f.id}</div>
+            <div class="font-option-sample" style="font-family:${f.css}">Chalkbox</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Body font</div>
+      <div class="font-grid" id="bodyFontGrid">
+        ${BODY_FONTS.map(f=>`
+          <div class="font-option ${state.settings.bodyFont===f.id?'selected':''}" data-font="${f.id}">
+            <div class="font-option-label">${f.id}</div>
+            <div class="font-option-sample" style="font-family:${f.css};font-size:15px">The quick brown fox</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Study media</div>
+      <label class="upload-card" style="max-width:320px">
+        <span class="upload-title">Show media panel in the sidebar</span>
+        <input type="checkbox" id="mediaPanelToggle" ${state.settings.showMediaPanel ? 'checked' : ''}>
+      </label>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-label">Page art</div>
+      <div class="btn-row" style="margin-bottom:10px">
+        <button class="btn" type="button" id="undoArtBtn">↺ undo last art change</button>
+        <button class="btn btn-danger" type="button" id="clearBackgroundBtn">clear background</button>
+        <button class="btn btn-danger" type="button" id="clearLogoBtn">clear logo</button>
+      </div>
+      <div class="theme-grid" style="margin-bottom:14px">
+        ${BACKGROUND_PRESETS.map(p=>`
+          <div class="theme-swatch ${state.settings.backgroundPreset===p.id?'selected':''}" data-background-preset="${p.id}" style="background:${p.css.includes('linear-gradient') ? p.css : p.css}">
+            <div class="theme-swatch-name" style="color:${p.id==='none' ? 'var(--chalk)' : '#fff'}">${p.name}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="settings-section" style="margin-bottom:16px">
+        <div class="settings-label">Sidebar color</div>
+        <div class="btn-row" style="flex-wrap:wrap">
+          <label class="upload-card" style="max-width:220px">
+            <span class="upload-title">Pick a sidebar color</span>
+            <input type="color" id="sidebarColorInput" value="${state.settings.sidebarColor || '#132720'}">
+          </label>
+          <button class="btn" type="button" id="resetSidebarColorBtn">reset</button>
+        </div>
+        <div class="theme-grid" style="margin-top:10px">
+          ${['#132720','#2f4b3e','#3f2a4a','#2f4c6b','#5a2f2f','#4a3a1b','#22443a','#2d3d5a'].map(c=>`<div class="theme-swatch ${state.settings.sidebarColor===c?'selected':''}" data-sidebar-color="${c}" style="background:${c}"></div>`).join('')}
+        </div>
+      </div>
+      <div class="upload-grid">
+        <label class="upload-card">
+          <span class="upload-title">Background image</span>
+          <input type="file" id="backgroundImageInput" accept="image/*">
+        </label>
+        <label class="upload-card">
+          <span class="upload-title">Title logo</span>
+          <input type="file" id="logoImageInput" accept="image/*">
+        </label>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('closeSettingsBtn').addEventListener('click', ()=>{
+    state.view = state.activeDeckId ? 'deck' : 'welcome';
+    render();
+  });
+
+  document.querySelectorAll('#themeGrid .theme-swatch').forEach(sw=>{
+    sw.addEventListener('click', ()=>{
+      state.settings.theme = sw.dataset.theme;
+      applySettings();
+      saveSettings();
+      render();
+    });
+  });
+  document.querySelectorAll('#displayFontGrid .font-option').forEach(opt=>{
+    opt.addEventListener('click', ()=>{
+      state.settings.displayFont = opt.dataset.font;
+      applySettings();
+      saveSettings();
+      render();
+    });
+  });
+  document.querySelectorAll('#bodyFontGrid .font-option').forEach(opt=>{
+    opt.addEventListener('click', ()=>{
+      state.settings.bodyFont = opt.dataset.font;
+      applySettings();
+      saveSettings();
+      render();
+    });
+  });
+
+  document.getElementById('undoArtBtn').addEventListener('click', ()=>{
+    undoLastArtChange();
+  });
+
+  document.getElementById('mediaPanelToggle').addEventListener('change', (e)=>{
+    state.settings.showMediaPanel = e.target.checked;
+    saveSettings();
+    renderMediaPanel();
+  });
+
+  document.getElementById('clearBackgroundBtn').addEventListener('click', ()=>{
+    pushArtHistory();
+    state.settings.backgroundImage = '';
+    state.settings.backgroundPreset = 'none';
+    saveSettings();
+    applySettings();
+    render();
+  });
+
+  document.getElementById('clearLogoBtn').addEventListener('click', ()=>{
+    pushArtHistory();
+    state.settings.logoImage = '';
+    saveSettings();
+    applySettings();
+  });
+
+  document.getElementById('sidebarColorInput').addEventListener('input', (e)=>{
+    state.settings.sidebarColor = e.target.value;
+    saveSettings();
+    applySettings();
+  });
+
+  document.getElementById('resetSidebarColorBtn').addEventListener('click', ()=>{
+    state.settings.sidebarColor = '';
+    saveSettings();
+    applySettings();
+    document.getElementById('sidebarColorInput').value = '#132720';
+  });
+
+  document.querySelectorAll('[data-sidebar-color]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.settings.sidebarColor = btn.dataset.sidebarColor;
+      saveSettings();
+      applySettings();
+      document.getElementById('sidebarColorInput').value = btn.dataset.sidebarColor;
+      render();
+    });
+  });
+
+  document.getElementById('backgroundImageInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    pushArtHistory();
+    state.settings.backgroundImage = await readAndResizeImage(file, 1600, 1000);
+    saveSettings();
+    applySettings();
+  });
+
+  document.getElementById('logoImageInput').addEventListener('change', async (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    pushArtHistory();
+    state.settings.logoImage = await readAndResizeImage(file, 220, 220);
+    saveSettings();
+    applySettings();
+  });
+
+  document.querySelectorAll('[data-background-preset]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.settings.backgroundPreset = btn.dataset.backgroundPreset;
+      if(btn.dataset.backgroundPreset !== 'none'){
+        state.settings.backgroundImage = '';
+      }
+      saveSettings();
+      applySettings();
+      render();
+    });
+  });
+}
+
+document.getElementById('newDeckBtn').addEventListener('click', createDeck);
+document.getElementById('settingsBtn').addEventListener('click', ()=>{ state.view='settings'; render(); });
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const mediaInput = document.getElementById('mediaUrlInput');
+  if(mediaInput){
+    mediaInput.addEventListener('change', ()=>{
+      state.settings.mediaUrl = mediaInput.value.trim();
+      saveSettings();
+      renderMediaPanel();
+    });
+  }
+});
+
+(async function init(){
+  loadSettings();
+  await loadDecks();
+  if(state.decks.length > 0){
+    state.activeDeckId = state.decks[0].id;
+    state.view = 'deck';
+  }
+  render();
+})();
+</script>
+</body>
+</html>
