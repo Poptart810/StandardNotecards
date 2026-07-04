@@ -1,0 +1,2 @@
+# StandardNotecards
+replacement for gizmo
